@@ -66,4 +66,7 @@ export class TodoCardComponent implements OnInit {
   pickDate(event) {
     this.dueDate = event.getFullYear() + "-" + (event.getMonth() + 1) + "-" + event.getDate();
   }
+  pickTime(event) {
+    this.dueTime = event;
+  }
 }

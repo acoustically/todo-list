@@ -16,6 +16,7 @@ import { SignComponent } from './sign/sign/sign.component';
 import { TodoCardComponent } from './todo-list/todo-card/todo-card.component';
 import { TodoListComponent } from './todo-list/todo-list/todo-list.component';
 import { TodoListCardComponent } from './todo-list/todo-list-card/todo-list-card.component';
+import { TimePickerComponent } from './time-picker/time-picker.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TodoListCardComponent } from './todo-list/todo-list-card/todo-list-card
     TodoCardComponent,
     TodoListComponent,
     TodoListCardComponent,
+    TimePickerComponent,
   ],
   imports: [
     BrowserModule,
