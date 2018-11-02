@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-todo-card',
@@ -17,9 +17,10 @@ export class TodoCardComponent implements OnInit {
   pre_x: number;
   pre_y: number;
   isDown: boolean = false;
-  extendedCardVisibility = "collapse";
+  extendedCardVisibility = "hidden";
   extendedCardTop: number;
   extendedCardLeft: number;
+  @ViewChild("extendedCard") extendedCard;
 
   constructor() { }
 
@@ -31,7 +32,7 @@ export class TodoCardComponent implements OnInit {
     this.y = event.y;
     this.pre_x = event.x;
     this.pre_y = event.y;
-    if(this.extendedCardVisibility == "collapse") {
+    if(this.extendedCardVisibility == "hidden") {
       this.isDown = true;
     }
   }
@@ -58,10 +59,16 @@ export class TodoCardComponent implements OnInit {
     this.extendedCardVisibility = "visible";
     this.extendedCardLeft = this.left + 310;
     this.extendedCardTop = this.top;
+    if(this.extendedCardTop + 500 > window.innerHeight) {
+      this.extendedCardTop -= this.top + 500 - window.innerHeight;
+    }
+    if(this.extendedCardLeft + 500 > window.innerWidth) {
+      this.extendedCardLeft = this.left - 500;
+    }
   }
   
   closeExtendedCard() {
-    this.extendedCardVisibility = "collapse";
+    this.extendedCardVisibility = "hidden";
   }
   pickDate(event) {
     this.dueDate = event.getFullYear() + "-" + (event.getMonth() + 1) + "-" + event.getDate();

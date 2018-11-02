@@ -7,7 +7,7 @@
     {{dueDate}} {{dueTime}}
   </div>
 </div>
-<div class="extended-todo-card" [style.visibility]="extendedCardVisibility"
+<div #extendedCard class="extended-todo-card" [style.visibility]="extendedCardVisibility"
   [style.top.px]="extendedCardTop" [style.left.px]="extendedCardLeft">
   <div class="form-group">
     <label for="inputTitle"><h5>Title</h5></label>
