@@ -1,33 +1,40 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-todo-card',
   templateUrl: './todo-card.component.html',
-  styleUrls: ['./todo-card.component.scss']
+  styleUrls: ['./todo-card.component.scss'],
+  inputs:["title", "description", "dueDate", "index", "dueTime", "left", "top", "todoId", "maxzIndex"],
 })
 export class TodoCardComponent implements OnInit {
-  title: string = "title";
-  description: string = "description";
-  dueDate: string = "2018-10-31";
-  dueTime: string = "12:00 AM";
-  top: number = 30;
-  left: number = 30;
+  title: string;
+  description: string;
+  dueDate: string;
+  dueTime: string;
+  top: number;
+  left: number;
+  todoId: number;
+  index: number;
   x: number;
   y: number;
   pre_x: number;
   pre_y: number;
   isDown: boolean = false;
+  maxzIndex: number;
   extendedCardVisibility = "hidden";
   extendedCardTop: number;
   extendedCardLeft: number;
   @ViewChild("extendedCard") extendedCard;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
   }
 
   mousedown(event) {
+    this.index = this.maxzIndex;
+    event.stopPropagation();
     this.x = event.x;
     this.y = event.y;
     this.pre_x = event.x;
@@ -40,7 +47,7 @@ export class TodoCardComponent implements OnInit {
   mouseup(event) {
     this.isDown = false;
     if(event.x == this.pre_x && event.y == this.pre_y) {
-      this.extendCard();
+      this.extendCard(event);
     }
     this.pre_x = event.x;
     this.pre_y = event.y;
@@ -55,7 +62,8 @@ export class TodoCardComponent implements OnInit {
     }
   }
   
-  extendCard(){
+  extendCard(event){
+    event.stopPropagation();
     this.extendedCardVisibility = "visible";
     this.extendedCardLeft = this.left + 310;
     this.extendedCardTop = this.top;
@@ -66,9 +74,30 @@ export class TodoCardComponent implements OnInit {
       this.extendedCardLeft = this.left - 500;
     }
   }
+
+  clickExtendedCard(event) {
+    event.stopPropagation();
+  }
   
-  closeExtendedCard() {
+  closeExtendedCard(event) {
+    event.stopPropagation();
     this.extendedCardVisibility = "hidden";
+    let todo = {
+        "email": sessionStorage["email"],
+        "id": this.todoId,
+        "todo": this.title,
+        "description": this.description,
+        "due_date": this.dueDate,
+        "due_time": this.dueTime,
+        "left": this.left,
+        "top": this.top,
+        "z_index": this.index,
+    }
+    this.http.post("http://localhost:5000/todo/new", todo).subscribe(result => {
+      alert("result");
+    }, err => {
+      alert(err);
+    });
   }
   pickDate(event) {
     this.dueDate = event.getFullYear() + "-" + (event.getMonth() + 1) + "-" + event.getDate();

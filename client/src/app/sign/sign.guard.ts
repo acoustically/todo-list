@@ -14,6 +14,8 @@ export class SignGuard implements CanActivate {
     if ("email" in sessionStorage && "password" in sessionStorage) {
       return true;
     } else if("email" in localStorage && "password" in localStorage) {
+      sessionStorage.email = localStorage.email;
+      sessionStorage.password = localStorage.password;
       return true;
     } else {
       this.router.navigate(["/sign/in"]);

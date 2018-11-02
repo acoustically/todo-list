@@ -1,10 +1,12 @@
 <div class="layout">
-  <div class="todo">
-  <app-todo-card></app-todo-card>
+  <div class="todo" (mousedown)="newTodo($event)">
+    <app-todo-card *ngFor="let todo of todos" [left]="todo.left" (click)="clickTodo()" [maxzIndex]="maxzIndex"
+      [top]="todo.top" [todoId]="todo.id" [index]="todo.zIndex">test</app-todo-card>
+    <div class="new-todo">Click for new todo</div>
   </div>
   <div class="vl">
   </div>
   <div class="dead">
-  <app-todo-list></app-todo-list>
+    <app-todo-list></app-todo-list>
   </div>
 </div>
