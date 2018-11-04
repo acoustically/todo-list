@@ -61,12 +61,14 @@ export class TimePickerComponent implements OnInit {
 
   hourUp() {
     this.hour += 1;
-    if(this.hour > 12) {
+    if(this.hour > 11) {
       if(this.noon == "AM") {
         this.noon = "PM";
       } else {
         this.noon = "AM";
       }
+    }
+    if(this.hour > 12) {
       this.hour = 1;
     }
     this.setTime();
