@@ -1,17 +1,21 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-todo-card',
   templateUrl: './todo-card.component.html',
   styleUrls: ['./todo-card.component.scss'],
-  inputs:["title", "description", "dueDate", "index", "dueTime", "left", "top", "todoId", "maxzIndex"],
+  inputs:["title", "description", "dueDate", "index", "dueTime"
+    , "left", "top", "todoId", "maxzIndex", "trash"],
 })
 export class TodoCardComponent implements OnInit {
   title: string;
   description: string;
   dueDate: string;
   dueTime: string;
+  descriptionTemp: string;
+  dueDateTemp: string;
+  dueTimeTemp: string;
   top: number;
   left: number;
   todoId: number;
@@ -22,14 +26,32 @@ export class TodoCardComponent implements OnInit {
   pre_y: number;
   isDown: boolean = false;
   maxzIndex: number;
-  extendedCardVisibility = "hidden";
+  extendedCardVisibility = "collapse";
   extendedCardTop: number;
   extendedCardLeft: number;
   @ViewChild("extendedCard") extendedCard;
+  @ViewChild("card") card;
+  isCardOver:boolean = false;
+  isCardOnDone:boolean = false;
+  trash;
+  @Output() doneCard = new EventEmitter();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private element: ElementRef) { }
 
   ngOnInit() {
+  }
+
+  deleteCard() {
+    let card = {
+      "todo_id": this.todoId,
+      "email": sessionStorage["email"]
+    };
+    this.http.post("http://localhost:5000/todo/delete", card).subscribe(result => {
+      this.trash.src = "assets/images/Trash.png";
+      this.element.nativeElement.style["visibility"] = "collapse";
+    }, err => {
+
+    });
   }
 
   mousedown(event) {
@@ -39,12 +61,12 @@ export class TodoCardComponent implements OnInit {
     this.y = event.y;
     this.pre_x = event.x;
     this.pre_y = event.y;
-    if(this.extendedCardVisibility == "hidden") {
+    if(this.extendedCardVisibility == "collapse") {
       this.isDown = true;
     }
   }
 
-  mouseup(event) {
+  cardMouseUp(event) {
     this.isDown = false;
     if(event.x == this.pre_x && event.y == this.pre_y) {
       this.extendCard(event);
@@ -53,12 +75,57 @@ export class TodoCardComponent implements OnInit {
     this.pre_y = event.y;
   }
 
+  mouseup(event) {
+    this.isDown = false;
+    if(this.isCardOver) {
+      this.deleteCard();
+    } else {
+      this.saveCard();
+    }
+    if(this.isCardOnDone && !this.isCardOver) {
+      this.setDone();
+    }
+  }
+
   mousemove(event) {
     if(this.isDown) {
       this.left += event.x - this.x;
       this.top += event.y - this.y;
       this.x = event.x;
       this.y = event.y;
+      let cardRect = {
+        "left" : this.left,
+        "top" : this.top,
+        "right" : this.card.nativeElement.offsetWidth + this.left,
+        "bottom" : this.card.nativeElement.offsetHeight + this.top
+      };
+      let trashRect = {
+        "left" : this.trash.offsetLeft,
+        "top" : this.trash.offsetTop,
+        "right" : this.trash.offsetLeft + 100,
+        "bottom" : this.trash.offsetTop + 100
+      };
+      if(cardRect.right > trashRect.left && cardRect.bottom > trashRect.top 
+        && cardRect.left < trashRect.right && cardRect.top < trashRect.bottom) {
+        if(!this.isCardOver) {
+          this.isCardOver = true;
+          this.trash.src = "assets/images/TrashEnter.png";
+        }
+      } else {
+        if(this.isCardOver) {
+          this.isCardOver = false;
+          this.trash.src = "assets/images/Trash.png";
+        }
+        if(cardRect.right > trashRect.right + 5) {
+          if(!this.isCardOnDone) {
+            this.isCardOnDone = true;
+          }
+        } else {
+          if(this.isCardOnDone) {
+            this.isCardOnDone = false;
+          }
+        }
+      }
     }
   }
   
@@ -81,7 +148,13 @@ export class TodoCardComponent implements OnInit {
   
   closeExtendedCard(event) {
     event.stopPropagation();
-    this.extendedCardVisibility = "hidden";
+    this.extendedCardVisibility = "collapse";
+    this.saveCard();  
+  }
+  saveCard() {
+    if(this.title == "") {
+      return;
+    }
     let todo = {
         "email": sessionStorage["email"],
         "id": this.todoId,
@@ -94,11 +167,22 @@ export class TodoCardComponent implements OnInit {
         "z_index": this.index,
     }
     this.http.post("http://localhost:5000/todo/new", todo).subscribe(result => {
-      alert("result");
     }, err => {
-      alert(err);
     });
   }
+  setDone() {
+    let todo = {
+        "email": sessionStorage["email"],
+        "todo_id": this.todoId,
+    }
+    this.http.post("http://localhost:5000/todo/done", todo).subscribe(result => {
+      this.element.nativeElement.style["visibility"] = "collapse";
+      this.doneCard.emit(this.todoId);
+      this.isCardOnDone = false;
+    }, err => {
+    });
+  }
+
   pickDate(event) {
     this.dueDate = event.getFullYear() + "-" + (event.getMonth() + 1) + "-" + event.getDate();
   }

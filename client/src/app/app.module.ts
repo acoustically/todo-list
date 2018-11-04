@@ -17,6 +17,7 @@ import { TodoCardComponent } from './todo-list/todo-card/todo-card.component';
 import { TodoListComponent } from './todo-list/todo-list/todo-list.component';
 import { TodoListCardComponent } from './todo-list/todo-list-card/todo-list-card.component';
 import { TimePickerComponent } from './time-picker/time-picker.component';
+import { DragedDoneCardComponent } from './todo-list/draged-done-card/draged-done-card.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
     TodoListComponent,
     TodoListCardComponent,
     TimePickerComponent,
+    DragedDoneCardComponent,
   ],
   imports: [
     BrowserModule,

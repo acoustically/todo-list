@@ -1,7 +1,7 @@
 <div class="todo">
-<div class="todo-card" [(style.top.px)]="top" [(style.z-index)]="index"
-  [(style.left.px)]="left" (mousedown)="mousedown($event)" 
-  (mouseup)="mouseup($event)" (window:mousemove)="mousemove($event)">
+<div #card class="todo-card" [(style.top.px)]="top" [(style.z-index)]="index"
+  [(style.left.px)]="left" (mousedown)="mousedown($event)" (mouseup)="cardMouseUp($event)"
+  (window:mouseup)="mouseup($event)" (window:mousemove)="mousemove($event)">
   <h5>{{title}}</h5>
   <p>{{description}}</p>
   <div class="deadline">

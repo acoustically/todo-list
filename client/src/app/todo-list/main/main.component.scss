@@ -1,4 +1,5 @@
 .layout {
+
   position: absolute;
   width: 100%;
   height: 100%;
@@ -36,4 +37,11 @@
   color: #999999;
   z-index: 1;
   position: fixed;
-} 
+}
+.trash {
+  position: fixed;
+  width:100px;
+  height: 100px;
+  right: 325px;
+  bottom: 10px;
+}
