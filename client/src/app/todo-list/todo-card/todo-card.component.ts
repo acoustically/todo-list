@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ElementRef, Output, EventEmitter, AfterViewChecked } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   inputs:["title", "description", "dueDate", "index", "dueTime"
     , "left", "top", "todoId", "maxzIndex", "trash"],
 })
-export class TodoCardComponent implements OnInit {
+export class TodoCardComponent implements OnInit, AfterViewChecked {
   title: string;
   description: string;
   dueDate: string;
@@ -31,6 +31,8 @@ export class TodoCardComponent implements OnInit {
   extendedCardLeft: number;
   @ViewChild("extendedCard") extendedCard;
   @ViewChild("card") card;
+  @ViewChild("deadline") deadline;
+  @ViewChild("timePicker") timePicker;
   isCardOver:boolean = false;
   isCardOnDone:boolean = false;
   trash;
@@ -39,6 +41,23 @@ export class TodoCardComponent implements OnInit {
   constructor(private http: HttpClient, private element: ElementRef) { }
 
   ngOnInit() {
+  }
+  ngAfterViewChecked() {
+    if(this.dueDate != "") {
+      let dates = this.dueDate.split("-");
+      let time = this.dueTime.split(":");
+      let min = time[1].split(" ");
+      let hour = Number(time[0]);
+      if(min[1] == "PM") {
+        hour += 12;
+      }
+      let date = new Date(Number(dates[0]), Number(dates[1])-1, Number(dates[2]), Number(hour), Number(min[0]), 0);
+      let currentDate = new Date();
+      if(date < currentDate) {
+        this.card.nativeElement.style.backgroundColor="#8C5873";
+        this.deadline.nativeElement.style.color="#FF0000";
+      }
+    }
   }
 
   deleteCard() {
@@ -150,6 +169,7 @@ export class TodoCardComponent implements OnInit {
     event.stopPropagation();
     this.extendedCardVisibility = "collapse";
     this.saveCard();  
+    this.timePicker.closes();
   }
   saveCard() {
     if(this.title == "") {

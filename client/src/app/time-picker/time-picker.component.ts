@@ -58,6 +58,9 @@ export class TimePickerComponent implements OnInit {
       this.visibility = "collapse";
     }
   }
+  closes() {
+    this.visibility = "collapse";
+  }
 
   hourUp() {
     this.hour += 1;
