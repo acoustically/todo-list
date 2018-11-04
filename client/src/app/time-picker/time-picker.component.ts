@@ -33,7 +33,7 @@ export class TimePickerComponent implements OnInit {
     this.ori_top = this.top;
   }
 
-  click() {
+  click(event) {
     this.visibility = "visible";
     if(this.timePicker.nativeElement.getBoundingClientRect().top + 130 + this.ori_top - this.top > window.innerHeight) {
       this.top = 318;

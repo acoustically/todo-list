@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
     , "left", "top", "todoId", "maxzIndex", "trash"],
 })
 export class TodoCardComponent implements OnInit, AfterViewChecked {
+  date;
   title: string;
   description: string;
   dueDate: string;

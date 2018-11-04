@@ -22,7 +22,7 @@
     <div>
       <h5>Due date</h5>
       <div class="form-group form-date">
-        <input class="form-control due-date" [matDatepicker]="picker" [(ngModel)]="_" 
+        <input class="form-control due-date" [matDatepicker]="picker" [(ngModel)]="date" 
           (ngModelChange)="pickDate($event)" (click)="picker.open()" placeholder="10/31/2018" readonly>
         <mat-datepicker #picker></mat-datepicker>
       </div>
