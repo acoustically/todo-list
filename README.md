@@ -2,14 +2,14 @@
 2018 winter coding 2nd test
 
 1.의존성 설치
-1-1 angular client
-sudo apt-get install npm
-sudo npm install -g n
-sudo n latest
-sudo npm install @angular/cli
-sudo npm install --save-dev @angular-devkit/build-angular
-cd ...../todo-list/client
-ng serve
+1-1 angular client<br/>
+sudo apt-get install npm<br/>
+sudo npm install -g n<br/>
+sudo n latest<br/>
+sudo npm install @angular/cli<br/>
+sudo npm install --save-dev @angular-devkit/build-angular<br/>
+cd ...../todo-list/client<br/>
+ng serve<br/><br/>
 
 1-2 flask server
 sudo apt-get install python3 python3-pip
